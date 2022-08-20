@@ -19,7 +19,8 @@
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
-			"init": "com.williambl.mineball.MineballMod"
+			"init": "com.williambl.mineball.MineballMod",
+			"client_init": "com.williambl.mineball.MineballModClient"
 		},
 		"depends": [
 			{
@@ -36,5 +37,6 @@
 			}
 		]
 	},
-	"mixin": "mineball.mixins.json"
+	"mixin": "mineball.mixins.json",
+	"accessWidener": "mineball.accesswidener"
 }
