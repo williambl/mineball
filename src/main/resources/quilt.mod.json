@@ -19,7 +19,7 @@
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
-			"init": "com.williambl.mineball.Mineball"
+			"init": "com.williambl.mineball.MineballMod"
 		},
 		"depends": [
 			{

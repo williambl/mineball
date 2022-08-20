@@ -6,7 +6,7 @@ import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Mineball implements ModInitializer {
+public class MineballMod implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Mineball");
 
 	public static final String MODID = "mineball";
