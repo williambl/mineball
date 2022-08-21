@@ -20,10 +20,11 @@ public class MineballMod implements ModInitializer {
 		return new ResourceLocation(MODID, path);
 	}
 
-	public static EntityType<Mineball> MINEBALL = Registry.register(Registry.ENTITY_TYPE, id("mineball"), FabricEntityTypeBuilder.create(MobCategory.AMBIENT, Mineball::new).dimensions(EntityDimensions.fixed(0.25f, 0.25f)).trackedUpdateRate(2).build());
+	public static EntityType<Mineball> MINEBALL = Registry.register(Registry.ENTITY_TYPE, id("mineball"), FabricEntityTypeBuilder.create(MobCategory.AMBIENT, Mineball::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).trackedUpdateRate(2).build());
 
 	@Override
 	public void onInitialize(ModContainer mod) {
 		SuperStrike.init();
+		Kicking.init();
 	}
 }

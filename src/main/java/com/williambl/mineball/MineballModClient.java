@@ -18,5 +18,6 @@ public class MineballModClient implements ClientModInitializer {
 		EntityRendererRegistry.register(MineballMod.MINEBALL, ThrownItemRenderer::new);
 
 		ClientWorldTickEvents.START.register(SuperStrikeClient.INSTANCE);
+		ClientWorldTickEvents.START.register(KickingClient.INSTANCE);
 	}
 }
