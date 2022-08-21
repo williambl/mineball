@@ -32,58 +32,8 @@ public class KickingClient implements ClientWorldTickEvents.Start {
 		} else {
 			if (wasKeyDown) {
 				wasKeyDown = false;
-				var forwards = client.player.getForward();
-				ClientPlayNetworking.send(Kicking.PACKET_ID, Kicking.createPacket(forwards.yRot(
-					rotationFromKeys(client)
-				)));
+				ClientPlayNetworking.send(Kicking.PACKET_ID, Kicking.createPacket(client.player.getDeltaMovement().normalize()));
 			}
 		}
-	}
-
-	private static float rotationFromKeys(Minecraft client) {
-		int horizontal = getHorizontalDirection(client);
-		int vertical = getVerticalDirection(client);
-
-		if (horizontal == -1) {
-			return (float) switch (vertical) {
-				case -1 -> 1.25 * Math.PI;
-				case 1  -> 1.75 * Math.PI;
-				default -> 1.50 * Math.PI;
-			};
-		} else if (horizontal == 1) {
-			return (float) switch (vertical) {
-				case -1 -> 0.75 * Math.PI;
-				case 1  -> 0.25 * Math.PI;
-				default -> 0.50 * Math.PI;
-			};
-		} else {
-			return vertical == -1 ? (float) Math.PI : 0;
-		}
-	}
-
-	private static int getHorizontalDirection(Minecraft client) {
-		int dir = 0;
-
-		if (client.options.keyLeft.isDown()) {
-			dir--;
-		}
-		if (client.options.keyRight.isDown()) {
-			dir++;
-		}
-
-		return dir;
-	}
-
-	private static int getVerticalDirection(Minecraft client) {
-		int dir = 0;
-
-		if (client.options.keyUp.isDown()) {
-			dir--;
-		}
-		if (client.options.keyDown.isDown()) {
-			dir++;
-		}
-
-		return dir;
 	}
 }
