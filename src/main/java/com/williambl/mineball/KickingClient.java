@@ -31,6 +31,7 @@ public class KickingClient implements ClientWorldTickEvents.Start {
 			wasKeyDown = true;
 		} else {
 			if (wasKeyDown) {
+				wasKeyDown = false;
 				var forwards = client.player.getForward();
 				ClientPlayNetworking.send(Kicking.PACKET_ID, Kicking.createPacket(forwards.yRot(
 					rotationFromKeys(client)
