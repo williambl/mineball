@@ -113,28 +113,6 @@ public class Mineball extends Entity implements ItemSupplier {
 
 
 	@Override
-	public void push(Entity entity) {
-		super.push(entity);
-		if (!this.isPassengerOfSameVehicle(entity)) {
-		var otherMovement = entity.position().subtract(entity.xo, entity.yo, entity.zo);
-			var movement = this.getDeltaMovement();
-			double xVel = movement.x();
-			double yVel = movement.y();
-			double zVel = movement.z();
-			if (Math.abs(movement.x()) < 0.01 || Math.signum(movement.x()) == Math.signum(otherMovement.x())) {
-				xVel = Math.abs(otherMovement.x()) > Math.abs(movement.x()) ? otherMovement.x() : movement.x();
-			}
-			if (Math.abs(movement.y()) < 0.01 || Math.signum(movement.y()) == Math.signum(otherMovement.y())) {
-				yVel = Math.abs(otherMovement.y()) > Math.abs(movement.y()) ? otherMovement.y() : movement.y();
-			}
-			if (Math.abs(movement.z()) < 0.01 || Math.signum(movement.z()) == Math.signum(otherMovement.z())) {
-				zVel = Math.abs(otherMovement.z()) > Math.abs(movement.z()) ? otherMovement.z() : movement.z();
-			}
-			this.setDeltaMovement(new Vec3(xVel, yVel, zVel));
-		}
-	}
-
-	@Override
 	public boolean shouldRenderAtSqrDistance(double d) {
 		double e = this.getBoundingBox().getSize() * 10;
 		if (Double.isNaN(e)) {
