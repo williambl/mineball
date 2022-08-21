@@ -1,5 +1,6 @@
 package com.williambl.mineball;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -9,7 +10,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -20,6 +20,8 @@ import java.util.Objects;
 
 @ParametersAreNonnullByDefault
 public class Mineball extends Entity implements ItemSupplier {
+
+	private int fireTicks = 0;
 
 	public final List<PossessionData> possessions = new ArrayList<>();
 
@@ -83,6 +85,15 @@ public class Mineball extends Entity implements ItemSupplier {
 				}
 			}
 		}
+
+		if (this.level.isClientSide()) {
+			if (this.fireTicks > 0) {
+				this.fireTicks--;
+				for (int i = 0; i < 3; i++) {
+					this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0.0, 0.0, 0.0);
+				}
+			}
+		}
 	}
 
 	private double getInertia() {
@@ -116,6 +127,22 @@ public class Mineball extends Entity implements ItemSupplier {
 		this.kick(entity, 0.9, factor);
 	}
 
+	public void setSuperStriking() {
+		this.level.broadcastEntityEvent(this, (byte) 63);
+	}
+
+	@Override
+	public boolean isOnFire() {
+		return super.isOnFire() || (this.level.isClientSide() && this.fireTicks > 0);
+	}
+
+	@Override
+	public void handleEntityEvent(byte b) {
+		switch (b) {
+			case 63 -> this.fireTicks = 20;
+			default -> super.handleEntityEvent(b);
+		}
+	}
 
 	@Override
 	public boolean shouldRenderAtSqrDistance(double d) {

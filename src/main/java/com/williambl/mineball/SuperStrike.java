@@ -1,5 +1,6 @@
 package com.williambl.mineball;
 
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntitySelector;
@@ -25,6 +26,8 @@ public class SuperStrike {
 					.min(Comparator.comparing(player::distanceToSqr))
 					.ifPresent(ball -> {
 						ball.kick(player, 0.4, factorFromDistance(distance));
+						ball.setSuperStriking();
+						player.getLevel().sendParticles(ParticleTypes.FLAME, player.getX(), player.getY(), player.getZ(), 10, player.getBbWidth(), player.getBbHeight(), player.getBbWidth(), 0.1);
 					}));
 		});
 	}
