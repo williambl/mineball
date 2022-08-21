@@ -93,15 +93,21 @@ public class Mineball extends Entity implements ItemSupplier {
 					this.level.addParticle(ParticleTypes.FLAME, this.getX(), this.getY(), this.getZ(), 0.0, 0.0, 0.0);
 				}
 			}
+
+			if (this.isInWater()) {
+				for(int o = 0; o < 4; ++o) {
+					this.level.addParticle(ParticleTypes.BUBBLE, this.getX(), this.getY(), this.getZ(), 0.0, 0.0, 0.0);
+				}
+			}
 		}
 	}
 
 	private double getInertia() {
-		return this.horizontalCollision ? 0.65 : 0.95;
+		return this.isOnGround() ? Math.min(this.getBlockStateOn().getBlock().getFriction() + 0.35, 1.0) : this.isInWater() || this.isInWater() ? 0.6 : 0.95;
 	}
 
 	private double getGravity() {
-		return -0.04;
+		return this.isInWaterOrBubble() ? 0.1 : -0.04;
 	}
 
 	private double getPossessionKickFactor(Entity entity) {
