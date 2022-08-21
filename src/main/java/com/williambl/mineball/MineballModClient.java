@@ -15,7 +15,7 @@ public class MineballModClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient(ModContainer mod) {
-		EntityRendererRegistry.register(MineballMod.MINEBALL, ThrownItemRenderer::new);
+		EntityRendererRegistry.register(MineballMod.MINEBALL, context -> new ThrownItemRenderer<>(context, 1.5f, false));
 
 		ClientWorldTickEvents.START.register(SuperStrikeClient.INSTANCE);
 		ClientWorldTickEvents.START.register(KickingClient.INSTANCE);
