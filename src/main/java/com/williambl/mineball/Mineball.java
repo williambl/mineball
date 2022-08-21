@@ -1,36 +1,28 @@
 package com.williambl.mineball;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.WaterAnimal;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @ParametersAreNonnullByDefault
 public class Mineball extends Entity implements ItemSupplier {
+
+	public final List<PossessionData> possessions = new ArrayList<>();
+
 	public Mineball(EntityType<? extends Mineball> entityType, Level level) {
 		super(entityType, level);
 	}
@@ -60,10 +52,34 @@ public class Mineball extends Entity implements ItemSupplier {
 
 		// pushing around
 		if (!this.level.isClientSide()) {
-			List<Entity> list = this.level.getEntities(this, this.getBoundingBox().inflate(0.001), EntitySelector.pushableBy(this));
-			if (!list.isEmpty()) {
-				for (Entity entity : list) {
+			List<Entity> collidingEntities = this.level.getEntities(this, this.getBoundingBox().inflate(0.001), EntitySelector.pushableBy(this));
+			if (!collidingEntities.isEmpty()) {
+				for (Entity entity : collidingEntities) {
 					this.push(entity);
+				}
+			}
+
+			{
+				var iterator = this.possessions.iterator();
+				int count = 0;
+				while (iterator.hasNext()) {
+					var possession = iterator.next();
+					count++;
+					if (collidingEntities.contains(possession.entity)) {
+						possession.incrementTicksSoFar();
+						possession.resetTimeout();
+					} else {
+						possession.decrementTicksBeforeTimeout();
+						if (possession.ticksBeforeTimeout() <= 0 || count > 3) {
+							iterator.remove();
+						}
+					}
+				}
+			}
+
+			for (Entity entity : collidingEntities) {
+				if (this.possessions.stream().noneMatch(p -> p.entity() == entity)) {
+					this.possessions.add(new PossessionData(entity));
 				}
 			}
 		}
@@ -75,6 +91,20 @@ public class Mineball extends Entity implements ItemSupplier {
 
 	private double getGravity() {
 		return -0.04;
+	}
+
+	private double getPossessionKickFactor(Entity entity) {
+		for (var possession : this.possessions) {
+			if (possession.entity() == entity) {
+				return Math.max(Math.min(2.0 * (possession.ticksSoFar() / 20.0), 2.0), 1.0);
+			}
+		}
+
+		return 1.0;
+	}
+
+	public void kick(Entity entity, double factor) {
+		this.setDeltaMovement(this.getDeltaMovement().add(entity.getForward().add(0.0, 0.9, 0.0).scale(factor * this.getPossessionKickFactor(entity))));
 	}
 
 	@Override
@@ -122,5 +152,66 @@ public class Mineball extends Entity implements ItemSupplier {
 	@Override
 	public ItemStack getItem() {
 		return Items.SNOWBALL.getDefaultInstance();
+	}
+
+	static final class PossessionData {
+		private final Entity entity;
+		private int ticksSoFar;
+		private int ticksBeforeTimeout;
+
+		private static final int MAX_TIMEOUT = 60;
+
+		PossessionData(Entity entity) {
+			this.entity = entity;
+			this.ticksSoFar = 0;
+			this.ticksBeforeTimeout = MAX_TIMEOUT;
+		}
+
+		public Entity entity() {
+			return this.entity;
+		}
+
+		public int ticksSoFar() {
+			return this.ticksSoFar;
+		}
+
+		public int ticksBeforeTimeout() {
+			return this.ticksBeforeTimeout;
+		}
+
+		public void incrementTicksSoFar() {
+			this.ticksSoFar = this.ticksSoFar + 1;
+		}
+
+		public void decrementTicksBeforeTimeout() {
+			this.ticksBeforeTimeout = this.ticksBeforeTimeout - 1;
+		}
+
+		public void resetTimeout() {
+			this.ticksBeforeTimeout = MAX_TIMEOUT;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj == this) return true;
+			if (obj == null || obj.getClass() != this.getClass()) return false;
+			var that = (PossessionData) obj;
+			return Objects.equals(this.entity, that.entity) &&
+					this.ticksSoFar == that.ticksSoFar &&
+					this.ticksBeforeTimeout == that.ticksBeforeTimeout;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(this.entity, this.ticksSoFar, this.ticksBeforeTimeout);
+		}
+
+		@Override
+		public String toString() {
+			return "PossessionData[" +
+					"entity=" + this.entity + ", " +
+					"ticksSoFar=" + this.ticksSoFar + ", " +
+					"ticksBeforeTimeout=" + this.ticksBeforeTimeout + ']';
+		}
 	}
 }

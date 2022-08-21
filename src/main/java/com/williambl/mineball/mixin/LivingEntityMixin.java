@@ -24,7 +24,7 @@ public abstract class LivingEntityMixin extends Entity {
 	private void kickBallWithJump(CallbackInfo ci, double d) {
 		if (!this.level.isClientSide()) {
 			for (var ball : this.level.getEntities(EntityTypeTest.forClass(Mineball.class), this.getBoundingBox().inflate(0.1), EntitySelector.pushableBy(this))) {
-				ball.setDeltaMovement(ball.getDeltaMovement().add(this.getForward().add(0.0, 0.9, 0.0).scale(d * 2.0)));
+				ball.kick(this, d);
 			}
 		}
 	}
