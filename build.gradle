@@ -60,5 +60,13 @@ publishing {
 	}
 
 	repositories {
+		maven {
+			name = "willBlRepositoryReleases"
+			url = "https://maven.willbl.dev/releases"
+			credentials(PasswordCredentials)
+			authentication {
+				basic(BasicAuthentication)
+			}
+		}
 	}
 }
