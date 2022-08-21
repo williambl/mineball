@@ -53,6 +53,15 @@ public class SuperStrikeClient implements ClientWorldTickEvents.Start {
 				ClientPlayNetworking.send(SuperStrike.PACKET_ID, SuperStrike.createPacket(distance));
 				ticksHeldFor = 0;
 				target = 0;
+
+				var factor = SuperStrike.factorFromDistance(distance);
+				client.player.displayClientMessage(
+						Component.translatable(
+								"message.mineball.super_strike",
+								factor < 1 ? "" : "*".repeat((int) factor)
+						).withStyle(withFactorColouring(factor)),
+						true
+				);
 			}
 		}
 	}
