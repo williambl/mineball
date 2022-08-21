@@ -135,6 +135,17 @@ public class Mineball extends Entity implements ItemSupplier {
 	}
 
 	@Override
+	public boolean shouldRenderAtSqrDistance(double d) {
+		double e = this.getBoundingBox().getSize() * 10;
+		if (Double.isNaN(e)) {
+			e = 1.0;
+		}
+
+		e *= 64.0 * getViewScale();
+		return d < e * e;
+	}
+
+	@Override
 	protected void defineSynchedData() {
 
 	}
