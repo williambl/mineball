@@ -6,7 +6,7 @@
 		"version": "${version}",
 		"metadata": {
 			"name": "Mineball",
-			"description": "Mineball",
+			"description": "Adds a football you can kick around.",
 			"contributors": {
 				"Will BL": "Owner"
 			},
