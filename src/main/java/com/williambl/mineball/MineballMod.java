@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.item.group.api.QuiltItemGroup;
@@ -23,10 +24,14 @@ public class MineballMod implements ModInitializer {
 		return new ResourceLocation(MODID, path);
 	}
 
-	public static CreativeModeTab TAB = QuiltItemGroup.create(id("mineball"));
 
+	public static CreativeModeTab TAB = QuiltItemGroup.createWithIcon(id("mineball"), MineballMod::getTabIcon);
 	public static EntityType<Mineball> MINEBALL = Registry.register(Registry.ENTITY_TYPE, id("mineball"), FabricEntityTypeBuilder.create(MobCategory.AMBIENT, Mineball::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).trackedUpdateRate(2).build());
 	public static Item MINEBALL_ITEM = Registry.register(Registry.ITEM, id("mineball"), new MineballItem(new Item.Properties().stacksTo(16).tab(TAB)));
+
+	public static ItemStack getTabIcon() {
+		return MINEBALL_ITEM.getDefaultInstance();
+	}
 
 	@Override
 	public void onInitialize(ModContainer mod) {
