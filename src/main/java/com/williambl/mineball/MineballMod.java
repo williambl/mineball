@@ -24,5 +24,6 @@ public class MineballMod implements ModInitializer {
 
 	@Override
 	public void onInitialize(ModContainer mod) {
+		SuperStrike.init();
 	}
 }

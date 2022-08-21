@@ -103,9 +103,14 @@ public class Mineball extends Entity implements ItemSupplier {
 		return 1.0;
 	}
 
-	public void kick(Entity entity, double factor) {
-		this.setDeltaMovement(this.getDeltaMovement().add(entity.getForward().add(0.0, 0.9, 0.0).scale(factor * this.getPossessionKickFactor(entity))));
+	public void kick(Entity entity, double upwardsFactor, double factor) {
+		this.setDeltaMovement(this.getDeltaMovement().add(entity.getForward().add(0.0, upwardsFactor, 0.0).scale(factor * this.getPossessionKickFactor(entity))));
 	}
+
+	public void kick(Entity entity, double factor) {
+		this.kick(entity, 0.9, factor);
+	}
+
 
 	@Override
 	public void push(Entity entity) {
