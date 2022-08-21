@@ -2,5 +2,6 @@
   "key.mineball.super_strike": "SUPER STRIKE",
   "key.mineball.kick": "Kick",
   "key.categories.mineball": "Mineball",
-  "message.mineball.super_strike": "%1$s SUPER STRIKE %1$s"
+  "message.mineball.super_strike": "%1$s SUPER STRIKE %1$s",
+  "entity.mineball.mineball": "Mineball"
 }
