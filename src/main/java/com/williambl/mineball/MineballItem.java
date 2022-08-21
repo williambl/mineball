@@ -1,7 +1,10 @@
 package com.williambl.mineball;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -11,6 +14,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -18,6 +22,7 @@ import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
@@ -99,5 +104,22 @@ public class MineballItem extends Item {
 				return InteractionResultHolder.fail(itemStack);
 			}
 		}
+	}
+
+	public void initDispenserBehaviour() {
+		DispenserBlock.registerBehavior(this, new DefaultDispenseItemBehavior() {
+			@Override
+			protected ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+				Level level = blockSource.getLevel();
+				Position position = DispenserBlock.getDispensePosition(blockSource);
+				Direction direction = blockSource.getBlockState().getValue(DispenserBlock.FACING);
+				var ball = new Mineball(MineballMod.MINEBALL, level);
+				ball.setPos(position.x(), position.y(), position.z());
+				ball.setDeltaMovement(direction.getStepX(), direction.getStepY(), direction.getStepZ());
+				level.addFreshEntity(ball);
+				itemStack.shrink(1);
+				return itemStack;
+			}
+		});
 	}
 }

@@ -28,7 +28,7 @@ public class MineballMod implements ModInitializer {
 
 	public static CreativeModeTab TAB = QuiltItemGroup.createWithIcon(id("mineball"), MineballMod::getTabIcon);
 	public static EntityType<Mineball> MINEBALL = Registry.register(Registry.ENTITY_TYPE, id("mineball"), FabricEntityTypeBuilder.create(MobCategory.AMBIENT, Mineball::new).dimensions(EntityDimensions.fixed(0.75f, 0.75f)).trackedUpdateRate(2).build());
-	public static Item MINEBALL_ITEM = Registry.register(Registry.ITEM, id("mineball"), new MineballItem(new Item.Properties().stacksTo(16).tab(TAB)));
+	public static MineballItem MINEBALL_ITEM = Registry.register(Registry.ITEM, id("mineball"), new MineballItem(new Item.Properties().stacksTo(16).tab(TAB)));
 
 	public static SoundEvent KICK_SOUND = Registry.register(Registry.SOUND_EVENT, id("kick"), new SoundEvent(id("entity.mineball.kick")));
 	public static SoundEvent SUPER_STRIKE_SOUND = Registry.register(Registry.SOUND_EVENT, id("super_strike"), new SoundEvent(id("entity.mineball.super_strike")));
@@ -41,5 +41,6 @@ public class MineballMod implements ModInitializer {
 	public void onInitialize(ModContainer mod) {
 		SuperStrike.init();
 		Kicking.init();
+		MINEBALL_ITEM.initDispenserBehaviour();
 	}
 }
