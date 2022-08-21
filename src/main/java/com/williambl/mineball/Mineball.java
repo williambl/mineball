@@ -116,6 +116,7 @@ public class Mineball extends Entity implements ItemSupplier {
 
 	public void kick(Entity entity, Vec3 direction, double upwardsFactor, double factor) {
 		this.setDeltaMovement(this.getDeltaMovement().add(direction.add(0.0, upwardsFactor, 0.0).scale(factor * this.getPossessionKickFactor(entity))));
+		this.playSound(MineballMod.KICK_SOUND);
 	}
 
 
@@ -129,6 +130,7 @@ public class Mineball extends Entity implements ItemSupplier {
 
 	public void setSuperStriking() {
 		this.level.broadcastEntityEvent(this, (byte) 63);
+		this.playSound(MineballMod.SUPER_STRIKE_SOUND);
 	}
 
 	@Override

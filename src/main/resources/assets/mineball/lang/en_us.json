@@ -5,5 +5,7 @@
   "message.mineball.super_strike": "%1$s SUPER STRIKE %1$s",
   "entity.mineball.mineball": "Mineball",
   "item.mineball.mineball": "Mineball",
-  "itemGroup.mineball.mineball": "Mineball"
+  "itemGroup.mineball.mineball": "Mineball",
+  "subtitles.mineball.entity.mineball.super_strike": "Player performs SUPER STRIKE",
+  "subtitles.mineball.entity.mineball.kick": "Mineball kicked"
 }

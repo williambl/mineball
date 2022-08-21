@@ -1,0 +1,37 @@
+{
+  "entity.mineball.kick": {
+    "sounds": [
+      {
+        "name": "entity/player/attack/strong1",
+        "volume": 0.6
+      },
+      {
+        "name": "entity/player/attack/strong2",
+        "volume": 0.6
+      },
+      {
+        "name": "entity/player/attack/strong3",
+        "volume": 0.6
+      },
+      {
+        "name": "entity/player/attack/strong4",
+        "volume": 0.6
+      },
+      {
+        "name": "entity/player/attack/strong5",
+        "volume": 0.7
+      },
+      {
+        "name": "entity/player/attack/strong6",
+        "volume": 0.7
+      }
+    ],
+    "subtitle": "subtitles.mineball.entity.mineball.kick"
+  },
+  "entity.mineball.super_strike": {
+    "sounds": [
+      "mineball:entity/mineball/super_strike"
+    ],
+    "subtitle": "subtitles.mineball.entity.mineball.super_strike"
+  }
+}
