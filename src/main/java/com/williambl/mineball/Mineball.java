@@ -150,7 +150,7 @@ public class Mineball extends Entity implements ItemSupplier {
 
 	@Override
 	public ItemStack getItem() {
-		return Items.SNOWBALL.getDefaultInstance();
+		return MineballMod.MINEBALL_ITEM.getDefaultInstance();
 	}
 
 	static final class PossessionData {
