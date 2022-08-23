@@ -159,6 +159,12 @@ public class Mineball extends Entity implements ItemSupplier {
 		return super.isOnFire() || (this.level.isClientSide() && this.fireTicks > 0);
 	}
 
+	@Nullable
+	@Override
+	public ItemStack getPickResult() {
+		return MineballMod.MINEBALL_ITEM.getDefaultInstance();
+	}
+
 	@Override
 	public void handleEntityEvent(byte b) {
 		switch (b) {
