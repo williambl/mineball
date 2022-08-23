@@ -107,6 +107,10 @@ public class Mineball extends Entity implements ItemSupplier {
 	}
 
 	private double getGravity() {
+		if (this.isNoGravity()) {
+			return 0.0;
+		}
+
 		return this.isInWaterOrBubble() ? 0.1 : -0.04;
 	}
 
