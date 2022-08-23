@@ -4,14 +4,20 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ItemSupplier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
@@ -31,6 +37,11 @@ public class Mineball extends Entity implements ItemSupplier {
 
 	@Override
 	public boolean isPushable() {
+		return true;
+	}
+
+	@Override
+	public boolean isPickable() {
 		return true;
 	}
 
@@ -165,6 +176,37 @@ public class Mineball extends Entity implements ItemSupplier {
 
 		e *= 64.0 * getViewScale();
 		return d < e * e;
+	}
+
+	@Override
+	public boolean hurt(DamageSource damageSource, float f) {
+		if (this.isInvulnerableTo(damageSource)) {
+			return false;
+		} else {
+			if (!this.isRemoved() && !this.level.isClientSide) {
+				this.kill();
+				this.markHurt();
+				this.dropItem(damageSource.getEntity());
+			}
+
+			return true;
+		}
+	}
+
+	@Override
+	public boolean skipAttackInteraction(Entity entity) {
+		return entity instanceof Player player && !player.isShiftKeyDown();
+	}
+
+	private void dropItem(@Nullable Entity entity) {
+		this.playSound(MineballMod.KICK_SOUND, 1.0F, 1.0F);
+		if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+			if (entity instanceof Player player && player.getAbilities().instabuild) {
+				return;
+			}
+
+			this.spawnAtLocation(MineballMod.MINEBALL_ITEM);
+		}
 	}
 
 	@Override
